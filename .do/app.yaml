@@ -1,0 +1,43 @@
+name: subscriber-tracker
+region: ams3
+
+services:
+  - name: api
+    source_dir: api
+    run_command: bin/subscriber-tracker-api
+    github:
+      repo: jonfriesen/subscriber-tracker
+      branch: master
+      deploy_on_push: true
+    envs:
+      - value: ${db.DATABASE_URL}
+        key: DATABASE_URL
+    routes:
+      - path: "/api"
+    environment_slug: go
+
+static_sites:
+  - name: app
+    source_dir: app
+    environment_slug: node-js
+    build_command: yarn build && yarn export
+    github:
+      repo: jonfriesen/subscriber-tracker
+      branch: master
+      deploy_on_push: true
+    routes:
+      - path: "/"
+
+workers:
+  - name: worker
+    source_dir: worker
+    environment_slug: go
+    github:
+      repo: jonfriesen/subscriber-tracker
+      branch: master
+      deploy_on_push: true
+
+databases:
+  - name: db
+    engine: PG
+    version: "12"
