@@ -1,5 +1,4 @@
 name: subscriber-tracker
-region: ams3
 
 services:
   - name: api
